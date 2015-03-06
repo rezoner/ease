@@ -1,4 +1,4 @@
-Easing library.
+## As simple as easing can get
 
 ```javascript
 ease(t, easing);
