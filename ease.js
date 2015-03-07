@@ -2,11 +2,17 @@
 
   Ease 1.0
   
-  http://canvasquery.com
-  
-  (c) 2015 by Rezoner - http://rezoner.net
+  (c) 2015 Rezoner - http://rezoner.net
 
   `ease` may be freely distributed under the MIT license.
+      
+  Cubic-spline interpolation by Ivan Kuckir
+
+  http://blog.ivank.net/interpolation-with-cubic-splines.html
+
+  With slight modifications by Morgan Herlocker
+
+  https://github.com/morganherlocker/cubic-spline
 
 */
 
@@ -14,11 +20,9 @@
 
   var ease = function(progress, easing) {
 
-    var easingMethod = ease.cache[easing];
+    if (typeof ease.cache[easing] === "function") {
 
-    if (typeof easingMethod === "function") {
-
-      return easingMethod(progress);
+      return ease.cache[easing](progress);
 
     } else {
 
@@ -38,7 +42,7 @@
     return arguments[0];
   };
 
-  extend(ease, {
+  extend(ease, {          
 
     defaultEasing: "016",
 
@@ -302,6 +306,7 @@
       var b = -ks[i] * (xs[i] - xs[i - 1]) + (ys[i] - ys[i - 1]);
       var q = (1 - t) * ys[i - 1] + t * ys[i] + t * (1 - t) * (a * (1 - t) + b * t);
 
+      /*
       var py = ys[i - 2];
       var cy = ys[i - 1];
       var ny = (i < ys.length - 1) ? ys[i] : ys[i - 1];
@@ -312,7 +317,8 @@
 
       }
 
-      if (cy === ny && cy === py) q = py;
+    if (cy === ny && cy === py) q = py;
+    */
 
 
       return q;
