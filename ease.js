@@ -1,11 +1,13 @@
 /*     
 
-  Ease 1.0
+  Ease 1.1
   
-  (c) 2015 Rezoner - http://rezoner.net
+  http://canvasquery.com
+  
+  (c) 2015 by Rezoner - http://rezoner.net
 
   `ease` may be freely distributed under the MIT license.
-      
+     
   Cubic-spline interpolation by Ivan Kuckir
 
   http://blog.ivank.net/interpolation-with-cubic-splines.html
@@ -42,7 +44,7 @@
     return arguments[0];
   };
 
-  extend(ease, {          
+  extend(ease, {
 
     defaultEasing: "016",
 
@@ -199,6 +201,7 @@
 
         var sign = 1;
         var signed = false;
+        var trimming = false;
 
         for (var i = 0; i < array.length; i++) {
 
@@ -211,6 +214,9 @@
           } else if (char === "+") {
             sign = 1;
             array.splice(i--, 1);
+          } else if (char === "t") {
+            trimming = !trimming;
+            array.splice(i--, 1);
           } else array[i] = parseInt(array[i], 16) * sign;
 
         }
@@ -222,13 +228,28 @@
         var normalized = [];
 
         for (var i = 0; i < array.length; i++) {
+
           if (signed) {
+
             var diff = Math.max(Math.abs(min), Math.abs(max))
-            normalized.push((array[i]) / diff);
+            var value = array[i] / diff;
+
           } else {
+
             var diff = max - min;
-            normalized.push((array[i] - min) / diff);
+            var value = (array[i] - min) / diff;
+
           }
+
+          if (trimming) {
+
+            if (value < 0) value = 0;
+            if (value > 1.0) value = 1.0;
+
+          }
+
+          normalized.push(value);
+
         }
 
         this.cache[key] = normalized;
@@ -238,18 +259,6 @@
       return this.cache[key]
 
     },
-
-    /* 
-      
-      Cubic-spline interpolation by Ivan Kuckir
-
-      http://blog.ivank.net/interpolation-with-cubic-splines.html
-
-      With slight modifications by Morgan Herlocker
-
-      https://github.com/morganherlocker/cubic-spline
-
-    */
 
     splineK: {},
     splineX: {},
